@@ -214,10 +214,25 @@ class _SelectDialogState<T> extends State<SelectDialog<T>> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width * 0.8,
-      height: MediaQuery.of(context).size.height * 0.4,
-      constraints: widget.constraints ??
-          (isWeb ? webDefaultConstraints : mobileDefaultConstraints),
+        padding: EdgeInsets.only(
+          top: Consts.avatarRadius + Consts.padding,
+          bottom: Consts.padding,
+          left: Consts.padding,
+          right: Consts.padding,
+        ),
+        margin: EdgeInsets.only(top: Consts.avatarRadius),
+        decoration: new BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.circular(Consts.padding),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black26,
+              blurRadius: 10.0,
+              offset: const Offset(0.0, 10.0),
+            ),
+          ],
+        ),
       child: Column(
         children: <Widget>[
           if (widget.showSearchBox ?? true)
