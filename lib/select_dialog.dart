@@ -5,13 +5,6 @@ import 'package:flutter/material.dart';
 import 'multiple_items_bloc.dart';
 import 'select_bloc.dart';
 
-class Consts {
-  Consts._();
-
-  static const double padding = 16.0;
-  static const double avatarRadius = 30.0;
-}
-
 typedef Widget SelectOneItemBuilderType<T>(
     BuildContext context, T item, bool isSelected);
 
@@ -191,8 +184,8 @@ class _SelectDialogState<T> extends State<SelectDialog<T>> {
       BoxConstraints(maxWidth: 250, maxHeight: 500);
 
   BoxConstraints get mobileDefaultConstraints => BoxConstraints(
-        maxWidth: MediaQuery.of(context).size.width * 0.8,
-        maxHeight: MediaQuery.of(context).size.height * 0.4,
+        maxWidth: MediaQuery.of(context).size.width * 0.9,
+        maxHeight: MediaQuery.of(context).size.height * 0.7,
       );
 
   SelectOneItemBuilderType<T> get itemBuilder =>
@@ -213,115 +206,92 @@ class _SelectDialogState<T> extends State<SelectDialog<T>> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: (){},
-      child: Stack(
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.9,
+      height: MediaQuery.of(context).size.height * 0.7,
+      constraints: widget.constraints ??
+          (isWeb ? webDefaultConstraints : mobileDefaultConstraints),
+      child: Column(
         children: <Widget>[
-          Container(
-          padding: EdgeInsets.only(
-          top: Consts.avatarRadius + Consts.padding,
-            bottom: Consts.padding,
-            left: Consts.padding,
-            right: Consts.padding,
-          ),
-          margin: EdgeInsets.only(top: Consts.avatarRadius),
-          decoration: new BoxDecoration(
-            color: Colors.white,
-            shape: BoxShape.rectangle,
-            borderRadius: BorderRadius.circular(Consts.padding),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black26,
-                blurRadius: 10.0,
-                offset: const Offset(0.0, 10.0),
+          if (widget.showSearchBox ?? true)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                focusNode: bloc.focusNode,
+                onChanged: bloc.onTextChanged,
+                maxLines: widget.searchBoxMaxLines,
+                minLines: widget.searchBoxMinLines,
+                decoration: widget.searchBoxDecoration ??
+                    InputDecoration(
+                      hintText: widget.searchHint,
+                      contentPadding: const EdgeInsets.all(2.0),
+                    ),
               ),
-            ],
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              if (widget.showSearchBox ?? true)
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextField(
-                    focusNode: bloc.focusNode,
-                    onChanged: bloc.onTextChanged,
-                    maxLines: widget.searchBoxMaxLines,
-                    minLines: widget.searchBoxMinLines,
-                    decoration: widget.searchBoxDecoration ??
-                        InputDecoration(
-                          hintText: widget.searchHint,
-                          contentPadding: const EdgeInsets.all(2.0),
-                        ),
-                  ),
-                ),
-              Expanded(
-                child: Scrollbar(
-                  child: StreamBuilder<List<T>>(
-                    stream: bloc.filteredListOut,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasError) {
-                        if (widget.errorBuilder != null) {
-                          return widget.errorBuilder(context, snapshot.error);
-                        } else {
-                          return Center(child: Text("Oops. \n${snapshot.error}"));
-                        }
-                      } else if (!snapshot.hasData) {
-                        if (widget.loadingBuilder != null) {
-                          return widget.loadingBuilder(context);
-                        } else {
-                          return Center(child: CircularProgressIndicator());
-                        }
-                      } else if (snapshot.data.isEmpty) {
-                        if (widget.emptyBuilder != null) {
-                          return widget.emptyBuilder(context);
-                        } else {
-                          return Center(child: Text("No data found"));
-                        }
-                      }
-                      return Scrollbar(
-                        controller: bloc.scrollController,
-                        isAlwaysShown: widget.alwaysShowScrollBar,
-                        child: ListView.builder(
-                          itemCount: snapshot.data.length,
-                          itemBuilder: (context, index) {
-                            var item = snapshot.data[index];
-                            bool isSelected =
-                                multipleItemsBloc.selectedItems?.contains(item) ??
-                                    false;
-                            isSelected = isSelected || item == widget.selectedValue;
-                            return InkWell(
-                              child: itemBuilder(context, item, isSelected),
-                              onTap: () {
-                                if (isMultipleItems) {
-                                  setState(() {
-                                    if (isSelected) {
-                                      multipleItemsBloc.unselectItem(item);
-                                    } else {
-                                      multipleItemsBloc.selectItem(item);
-                                    }
-                                  });
+            ),
+          Expanded(
+            child: Scrollbar(
+              child: StreamBuilder<List<T>>(
+                stream: bloc.filteredListOut,
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    if (widget.errorBuilder != null) {
+                      return widget.errorBuilder(context, snapshot.error);
+                    } else {
+                      return Center(child: Text("Oops. \n${snapshot.error}"));
+                    }
+                  } else if (!snapshot.hasData) {
+                    if (widget.loadingBuilder != null) {
+                      return widget.loadingBuilder(context);
+                    } else {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                  } else if (snapshot.data.isEmpty) {
+                    if (widget.emptyBuilder != null) {
+                      return widget.emptyBuilder(context);
+                    } else {
+                      return Center(child: Text("No data found"));
+                    }
+                  }
+                  return Scrollbar(
+                    controller: bloc.scrollController,
+                    isAlwaysShown: widget.alwaysShowScrollBar,
+                    child: ListView.builder(
+                      itemCount: snapshot.data.length,
+                      itemBuilder: (context, index) {
+                        var item = snapshot.data[index];
+                        bool isSelected =
+                            multipleItemsBloc.selectedItems?.contains(item) ??
+                                false;
+                        isSelected = isSelected || item == widget.selectedValue;
+                        return InkWell(
+                          child: itemBuilder(context, item, isSelected),
+                          onTap: () {
+                            if (isMultipleItems) {
+                              setState(() {
+                                if (isSelected) {
+                                  multipleItemsBloc.unselectItem(item);
                                 } else {
-                                  onChange?.call(item);
-                                  Navigator.pop(context);
+                                  multipleItemsBloc.selectItem(item);
                                 }
-                              },
-                            );
+                              });
+                            } else {
+                              onChange?.call(item);
+                              Navigator.pop(context);
+                            }
                           },
-                        ),
-                      );
-                    },
-                  ),
-                ),
+                        );
+                      },
+                    ),
+                  );
+                },
               ),
-              if (isMultipleItems)
-                okButtonBuilder(context, () {
-                  multipleItemsBloc.onSelectButtonPressed();
-                  Navigator.pop(context);
-                }),
-            ],
+            ),
           ),
-        )
+          if (isMultipleItems)
+            okButtonBuilder(context, () {
+              multipleItemsBloc.onSelectButtonPressed();
+              Navigator.pop(context);
+            }),
         ],
       ),
     );
