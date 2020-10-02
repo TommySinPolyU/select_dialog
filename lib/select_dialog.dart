@@ -5,6 +5,13 @@ import 'package:flutter/material.dart';
 import 'multiple_items_bloc.dart';
 import 'select_bloc.dart';
 
+class Consts {
+  Consts._();
+
+  static const double padding = 16.0;
+  static const double avatarRadius = 30.0;
+}
+
 typedef Widget SelectOneItemBuilderType<T>(
     BuildContext context, T item, bool isSelected);
 
