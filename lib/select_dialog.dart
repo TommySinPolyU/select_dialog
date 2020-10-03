@@ -146,15 +146,16 @@ class _SelectDialogState<T> extends State<SelectDialog<T>> {
   SelectOneBloc<T> bloc;
   MultipleItemsBloc<T> multipleItemsBloc;
   void Function(T) onChange;
+  List<T> _itemsList;
 
   _SelectDialogState(
-    List<T> itemsList,
+    this._itemsList
     this.onChange,
     void Function(List<T>) onMultipleItemsChange,
     List<T> multipleSelectedValues,
     Future<List<T>> Function(String text) onFind,
   ) {
-    bloc = SelectOneBloc(itemsList, onFind);
+    bloc = SelectOneBloc(_itemsList, onFind);
     multipleItemsBloc = MultipleItemsBloc(
       multipleSelectedValues,
       onMultipleItemsChange,
