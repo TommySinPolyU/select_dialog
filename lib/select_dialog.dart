@@ -185,7 +185,8 @@ class _SelectDialogState<T> extends State<SelectDialog<T>> {
 
   BoxConstraints get mobileDefaultConstraints => BoxConstraints(
         maxWidth: MediaQuery.of(context).size.width * 0.8,
-        maxHeight: MediaQuery.of(context).size.height * 0.3,
+        //maxHeight: MediaQuery.of(context).size.height * 0.3,
+        maxHeight: 150,
       );
 
   SelectOneItemBuilderType<T> get itemBuilder =>
@@ -208,7 +209,8 @@ class _SelectDialogState<T> extends State<SelectDialog<T>> {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width * 0.8,
-      height: MediaQuery.of(context).size.height * 0.3,
+      //height: MediaQuery.of(context).size.height * 0.3,
+      height: 150,
       constraints: widget.constraints ??
           (isWeb ? webDefaultConstraints : mobileDefaultConstraints),
       child: Column(
