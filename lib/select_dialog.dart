@@ -211,7 +211,7 @@ class _SelectDialogState<T> extends State<SelectDialog<T>> {
     return Container(
       width: MediaQuery.of(context).size.width * 0.8,
       //height: MediaQuery.of(context).size.height * 0.3,
-      height: 80 + _itemsList.length * 30,
+      height: (80 + _itemsList.length * 30).toDouble(),
       constraints: widget.constraints ??
           (isWeb ? webDefaultConstraints : mobileDefaultConstraints),
       child: Column(
