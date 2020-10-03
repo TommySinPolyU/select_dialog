@@ -186,7 +186,7 @@ class _SelectDialogState<T> extends State<SelectDialog<T>> {
 
   BoxConstraints get mobileDefaultConstraints => BoxConstraints(
         maxWidth: MediaQuery.of(context).size.width * 0.8,
-        maxHeight: MediaQuery.of(context).size.height * 0.3,
+        maxHeight: MediaQuery.of(context).size.height * 0.6,
         //maxHeight: 150,
       );
 
