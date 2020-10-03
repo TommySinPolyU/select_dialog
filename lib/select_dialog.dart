@@ -149,7 +149,7 @@ class _SelectDialogState<T> extends State<SelectDialog<T>> {
   List<T> _itemsList;
 
   _SelectDialogState(
-    this._itemsList
+    this._itemsList,
     this.onChange,
     void Function(List<T>) onMultipleItemsChange,
     List<T> multipleSelectedValues,
